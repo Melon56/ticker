@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html style="background-color:black; font-family:sans-serif">
+ <h2 style="color:white">Memmory/dual thread test; runs 'til 1m</h2>
+ <h1 style="color:white">0</h1>
+ <button>start</button>
+ <p style="color:white">press start</p>
+ <script>
+let count = 0;
+document.querySelector("button").addEventListener("click", () => {
+ worker = new Worker('data:text/javascript;base64,Zm9yIChsZXQgaSA9IDA7IGkgPCAxMDAwMDAwOyBpKyspIHtzZWxmLnBvc3RNZXNzYWdlKCJlIil9Ow==');
+ let start = new Date();
+ document.querySelector("button").disabled = true;
+ document.querySelector("p").innerText = "working..."
+ disabled = true;
+ worker.onmessage = event => {
+  count = count + 1;
+  document.querySelector("h1").innerText = count;
+  if (count === 1000000) {
+   worker.terminate();
+   document.querySelector("p").innerText = "done, reload page to try again; Time:" + ((new Date() - start)/1000) + "s";
+}}});
+window.addEventListener("beforeunload", () => {worker.terminate()});
+ </script>
+</html>
